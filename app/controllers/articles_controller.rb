@@ -7,6 +7,7 @@ class ArticlesController < ApplicationController
 
 	def show
 		@article = Article.find(params[:id])
+		@comment = @article.comments.build
 	end
 
 	def new
@@ -14,7 +15,8 @@ class ArticlesController < ApplicationController
 	end
 
 	def create
-		@article = Article.new(article_params)
+		@article = Article.new
+		@article.title = params[:article][:title]
 		@article.save
 
 		flash.notice = "Article '#{@article.title}' Created!"
