@@ -1,4 +1,5 @@
 class ArticlesController < ApplicationController
+	#before_filter :require_login, :except => [:index, :show]
 	include ArticlesHelper
 
 	def index
@@ -15,8 +16,8 @@ class ArticlesController < ApplicationController
 	end
 
 	def create
-		@article = Article.new
-		@article.title = params[:article][:title]
+		@article = Article.new(article_params)
+		#@article.title = params[:article][:title]
 		@article.save
 
 		flash.notice = "Article '#{@article.title}' Created!"
@@ -38,10 +39,15 @@ class ArticlesController < ApplicationController
 
 	def update
 		@article = Article.find(params[:id])
-		@article.update(article_params)
+		@article.update_attributes(article_params)
 
 		flash.notice = "Article '#{@article.title}' Updated!"
 
 		redirect_to article_path(@article)
 	end
+
+	def article_params
+		params.require(:article).permit(:title, :body, :tag_list, :image)
+	end
+
 end
